@@ -6,7 +6,8 @@ namespace ArmaComparison
     {
         static void Main(string[] args)
         {
-            string[] lineStrings = System.IO.File.ReadAllLines(@"C:\Users\schwe\Desktop\testReadFile.txt");
+            string path = @"C:\Users\schwe\Desktop\testReadFile.txt";
+            string[] lineStrings = System.IO.File.ReadAllLines(path);
             foreach (string lineString in lineStrings)
             {
                 Console.WriteLine(lineString);
