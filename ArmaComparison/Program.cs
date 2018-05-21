@@ -1,4 +1,5 @@
 ﻿using System;
+using HtmlAgilityPack;
 
 namespace ArmaComparison
 {
@@ -6,12 +7,19 @@ namespace ArmaComparison
     {
         static void Main(string[] args)
         {
-            string path = @"C:\Users\schwe\Desktop\testReadFile.txt";
-            string[] lineStrings = System.IO.File.ReadAllLines(path);
-            foreach (string lineString in lineStrings)
+            string path = @"C:\Users\schwe\Desktop\Arma 3 Mod Preset ww2.html";
+            var doc = new HtmlDocument();
+            doc.Load(path);
+
+            var nodes = doc.DocumentNode.SelectNodes("//body//table//a");
+
+            foreach (HtmlNode node in nodes)
             {
-                Console.WriteLine(lineString);
+
+                Console.WriteLine(node.InnerText);
+                
             }
+
             Console.ReadKey(true);
         }
     }
