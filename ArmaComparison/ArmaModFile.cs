@@ -100,9 +100,34 @@ namespace ArmaComparison
             return false;
         }
 
-        private void Compare(ArmaModFile compareTo)
+        private void Compare(ArmaModFile compareModFile)
         {
-            
+            //first round: check if file 2 has every element file 1 has (missing elements)
+            foreach (ModElement mod in this.modList)
+            {
+                string currId = mod.id;
+                if (compareModFile.HasId(currId))
+                {
+                    Console.WriteLine($"Both files have {mod}.");
+                }
+                else
+                {
+                    Console.WriteLine($"File 2 is missing {mod}!");
+                }
+            }
+            //second round: check if file 1 has every element file 2 has (exceeding elements)
+            foreach (ModElement mod in compareModFile.modList)
+            {
+                string currId = mod.id;
+                if (this.HasId(currId))
+                {
+                    //reduntant to print they both have it, since that is already done above
+                }
+                else
+                {
+                    Console.WriteLine($"File 1 is missing {mod}!");
+                }
+            }
         }
 
 
@@ -110,12 +135,14 @@ namespace ArmaComparison
         {
             ArmaModFile file1 = new ArmaModFile(@"C:/Users/schwe/Desktop/jonas_ace.html");
             ArmaModFile file2 = new ArmaModFile(@"C:/Users/schwe/Desktop/Arma 3 Mod Preset broken_ace.html");
-            Console.WriteLine("File 1:");
+            /*Console.WriteLine("File 1:");
             file1.PrintModList();
             Console.WriteLine("File 2:");
-            file2.PrintModList();
+            file2.PrintModList();*/
 
-            Console.WriteLine(file2.HasId("753946944"));
+            file1.Compare(file2);
+
+            //Console.WriteLine(file2.HasId("753946944"));
 
             
 

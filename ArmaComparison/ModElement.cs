@@ -24,7 +24,7 @@ namespace ArmaComparison
 
         public override string ToString()
         {
-            return this.name + ": " + this.id;
+            return this.name + " (" + this.id + ")";
         }
     }
 }
