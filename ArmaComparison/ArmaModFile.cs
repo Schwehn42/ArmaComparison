@@ -100,7 +100,11 @@ namespace ArmaComparison
             return false;
         }
 
-        private void Compare(ArmaModFile compareModFile)
+        /**
+         * <summary>This method will compare two files and will point out which files are in common,
+         * and more importantly the differences</summary>
+         */
+        private void Compare(ArmaModFile compareModFile, bool showInCommon)
         {
             //first round: check if file 2 has every element file 1 has (missing elements)
             foreach (ModElement mod in this.modList)
@@ -108,6 +112,7 @@ namespace ArmaComparison
                 string currId = mod.id;
                 if (compareModFile.HasId(currId))
                 {
+                    if (showInCommon)
                     Console.WriteLine($"Both files have {mod}.");
                 }
                 else
@@ -140,7 +145,7 @@ namespace ArmaComparison
             Console.WriteLine("File 2:");
             file2.PrintModList();*/
 
-            file1.Compare(file2);
+            file1.Compare(file2, false);
 
             //Console.WriteLine(file2.HasId("753946944"));
 
