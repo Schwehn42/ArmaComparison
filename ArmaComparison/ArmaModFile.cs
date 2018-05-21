@@ -113,7 +113,7 @@ namespace ArmaComparison
                 if (compareModFile.HasId(currId))
                 {
                     if (showInCommon)
-                    Console.WriteLine($"Both files have {mod}.");
+                        Console.WriteLine($"Both files have {mod}.");
                 }
                 else
                 {
