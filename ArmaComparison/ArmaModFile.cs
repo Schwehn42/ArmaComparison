@@ -20,7 +20,7 @@ namespace ArmaComparison
         public ArmaModFile(string path)
         {
             this.path = path;
-            this.ParseIdList();
+            this.ParseModList();
         }
 
         /**
@@ -28,7 +28,7 @@ namespace ArmaComparison
          * It will retrieve all IDs and add them to a list
          * This method is called by the constructor.</summary>
          */
-        private void ParseIdList()
+        private void ParseModList()
         {
             HtmlDocument doc = new HtmlDocument();
             doc.Load(this.path);
