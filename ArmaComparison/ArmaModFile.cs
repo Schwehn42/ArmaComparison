@@ -8,10 +8,14 @@ namespace ArmaComparison
     class ArmaModFile
     {
 
-        private const string NODE_SELECTOR = "//body//table//a";
+        /**
+         * <summary>This is a selector to help find all the IDs.</summary>
+         */
+        private const string NodeSelectorId = "//body//table//a";
+        private const string NodeSelectorName = "//body//table//td";
 
         private string path { get; }
-        private readonly List<string> idList = new List<string>();
+        private readonly List<ModElement> modList = new List<ModElement>();
 
         public ArmaModFile(string path)
         {
@@ -19,14 +23,29 @@ namespace ArmaComparison
             this.ParseIdList();
         }
 
+        /**
+         * <summary>This method parses the html document provided.
+         * It will retrieve all IDs and add them to a list
+         * This method is called by the constructor.</summary>
+         */
         private void ParseIdList()
         {
-            var doc = new HtmlDocument();
+            HtmlDocument doc = new HtmlDocument();
             doc.Load(this.path);
 
-            var nodes = doc.DocumentNode.SelectNodes(NODE_SELECTOR);
+            HtmlNodeCollection nodesIds = doc.DocumentNode.SelectNodes(NodeSelectorId);
+            HtmlNodeCollection nodesNames = doc.DocumentNode.SelectNodes(NodeSelectorName);
 
-            foreach (HtmlNode node in nodes)
+            List<string> idElements = new List<string>();
+            List<string> textElements = new List<string>();
+
+
+            /*
+             * idElements and textElements are ALWAYS the same size !!!
+             * Because of this attribute, we can iterate the lists and add the i-th element to a ModElement
+             */
+
+            foreach (HtmlNode node in nodesIds)
             {
                 /*
                  * example: node looks like this:  <a href="http://steamcommunity.com/sharedfiles/filedetails/?id=450814997" data-type="Link">
@@ -36,30 +55,69 @@ namespace ArmaComparison
                  */
 
                 string id = node.InnerText.Split("id=")[1];
-                this.idList.Add(id);
+                idElements.Add(id);
             }
-        }
 
-        public void PrintIdList()
-        {
-            foreach (string s in this.idList)
+            foreach (HtmlNode node in nodesNames)
             {
-                Console.WriteLine(s);
+                if (node.Attributes.Contains("data-type") && node.Attributes["data-type"].Value == "DisplayName")
+                {
+                    string text = node.InnerText;
+                    textElements.Add(text);
+                }
+            }
+
+            for (var i = 0; i < idElements.Count; i++) //since idElements and textElements are the same size, no array out of bounds exception can happen.
+            {
+                ModElement addModElement = new ModElement(textElements[i], idElements[i]);
+                //now add this to out object refererence var
+                this.modList.Add(addModElement);
+            }
+
+           
+
+            
+        }
+
+        public void PrintModList()
+        {
+            foreach (ModElement el in this.modList)
+            {
+                Console.WriteLine(el);
             }
         }
 
-        private bool hasId(string search)
+        private bool HasId(string search)
         {
-            return this.idList.Contains(search);
+            foreach (ModElement mod in this.modList)
+            {
+                if (mod.id.Equals(search))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private void Compare(ArmaModFile compareTo)
+        {
+            
         }
 
 
         static void Main(string[] args)
         {
-            ArmaModFile file1 = new ArmaModFile(@"C:\Users\schwe\Desktop\Arma 3 Mod Preset ww2.html");
-            file1.PrintIdList();
+            ArmaModFile file1 = new ArmaModFile(@"C:/Users/schwe/Desktop/jonas_ace.html");
+            ArmaModFile file2 = new ArmaModFile(@"C:/Users/schwe/Desktop/Arma 3 Mod Preset broken_ace.html");
+            Console.WriteLine("File 1:");
+            file1.PrintModList();
+            Console.WriteLine("File 2:");
+            file2.PrintModList();
 
-            Console.WriteLine(file1.hasId("450814997"));
+            Console.WriteLine(file2.HasId("753946944"));
+
+            
 
             Console.ReadKey(true);
         }
